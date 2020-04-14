@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    {% load static %}
+    <title>Sign Up - Code Judge</title>
+    <link rel="stylesheet" href="{% static 'home/semantic/semantic.min.css' %}" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          margin: 0; 
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src=" {% static 'home/images/logo.png' %}" />
+          Code Judge
+        </a>
+      </div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui middle aligned center aligned grid">
+        <div class="four wide column">
+          <h2 class="ui teal image header">
+            <img src="{% static 'home/images/person.png' %}" class="image" />
+            <div class="content">
+              Sign Up 
+            </div>
+          </h2>
+          <form class="ui large form" method="POST" action="/signup/">
+            {% csrf_token %}
+            <div class="ui stacked segment">
+
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="genderless icon"></i>
+                  {{ form.first_name }}
+                </div>
+                {% if form.first_name.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.first_name.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+            </div>
+
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="bullseye icon"></i>
+                  {{ form.last_name }}
+                </div>
+                {% if form.last_name.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.last_name.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <div class="ui left icon input">
+                    <i class="barcode icon"></i>
+                    {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.username.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+                </div>
+    
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="user icon"></i>
+                  {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.email.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  {{ form.password1 }}
+                </div>
+                {% if form.password1.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.password1.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  {{ form.password2 }}
+                </div>
+                {% if form.password2.errors %}
+                <div class="ui pointing red basic label">
+                  <ul>
+                    {% for error in form.password2.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              <input class="ui fluid large teal submit button" type="submit"></input>
+
+            </div>
+          </form>
+
+          <div class="ui message">
+            Already have an account? <a href="/signin">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'home/semantic/jquery.js' %}"></script>
+    <script src="{% static 'home/semantic/semantic.min.js' %}"></script>
+    <script>
+      document.forms[0]['username'].placeholder = "Username";
+      document.forms[0]['password1'].placeholder = "Password";
+      document.forms[0]['password2'].placeholder = "Confirm Password";
+    </script>
+  </body>
+</html>
