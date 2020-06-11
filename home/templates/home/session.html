@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     {% load static %}
-    <title>Home - Code Judge</title>
+    <title>Session - Code Judge</title>
     <link
       rel="stylesheet"
       href="{% static 'home/semantic/semantic.min.css' %}"
     />
-    <!-- <link rel="stylesheet" href="{% static 'home/css/jquery.countdown.css' %}"> -->
     <style>
       body {
         background-color: whitesmoke;
@@ -33,27 +32,44 @@
     </div>
     <div id="maincontent" style="margin: 80px auto 0 auto">
       <div class="ui container">
-        <table class="ui selectable celled table" id="active">
+        <div class="ui cards">
+          <div class="ui centered card">
+            <div class="content">
+              <div class="header" id="status">
+
+              </div>
+              <div class="meta" id="statusText">Session running</div>
+            </div>
+          </div>
+          <div class="ui centered card">
+            <div class="content">
+              <div class="header">
+                <a href="/scoreboard/">Scoreboard/Report</a>
+              </div>
+              <div class="meta">Details about the session</div>
+            </div>
+          </div>
+        </div>
+        <table class="ui selectable celled table" id="questions">
           <thead>
             <tr>
-              <th class="center aligned" colspan="4">Active Sessions</th>
-            </tr>
-            <tr class="center aligned">
-              <th>Name</th>
-              <th colspan="1">Status</th>
-              <th colspan="1">Link</th>
+              <th class="center aligned two wide" >Sl. No.</th>
+              <th class="center aligned twelve wide" >Questions</th>
+              <th class="center aligned two wide" >Link</th>
             </tr>
           </thead>
           <tbody>
+
           </tbody>
         </table>
       </div>
     </div>
     <script src="{% static 'home/semantic/jquery.js' %}"></script>
     <script src="{% static 'home/semantic/semantic.min.js' %}"></script>
-    {{ data.table|json_script:"table-script" }}
+    {{ data.questions|json_script:"data-script" }}
+    {{ data.status|json_script:"timer-script" }}
     <script src="{% static 'home/js/timer/jquery.plugin.min.js' %}"></script>
     <script src="{% static 'home/js/timer/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'home/js/index.js' %}"></script>
+    <script src="{% static 'home/js/session.js' %}"></script>
   </body>
 </html>

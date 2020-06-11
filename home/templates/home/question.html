@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  {% load static %}
+  <title>{{ data.name }} - Code Judge</title>
+  <link rel="stylesheet" href="{% static 'home/semantic/semantic.min.css' %}" />
+  <style>
+    body {
+      background-color: whitesmoke;
+    }
+
+    #editor {
+      height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ui fixed inverted menu">
+    <div class="ui container">
+      <a href="#" class="header item">
+        <img class="logo" src=" {% static 'home/img/logo.png' %}" />
+        Code Judge
+      </a>
+      <a href="#" class="right floated item">Student :&nbsp; <span id="rollNo">{{ data.username }}</span></a>
+      <a href="/signout/" class="right floated item" id="logOut">Log Out</a>
+    </div>
+  </div>
+  <div id="maincontent" style="margin: 80px auto 0 auto">
+    <div class="ui container">
+      <table class="ui selectable celled table" id="active">
+        <thead>
+          <tr>
+            <th class="center aligned" colspan="4">Problem Statement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="4">
+              <div id="question"></div>
+            </td>
+          </tr>
+        </tbody>
+        <thead>
+          <th>
+            <i id="resultIcon"></i>
+            <pre id="error"></pre>
+            <span id="points"></span>
+          </th>
+        </thead>
+        <thead>
+          <tr>
+            <th class="center aligned" colspan="4">Code Editor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="4">
+              <div id="editor"></div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="right aligned">
+              <button class="ui button" id="execute">Submit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="{% static 'home/semantic/jquery.js' %}"></script>
+  <script src="{% static 'home/semantic/semantic.min.js' %}"></script>
+  <script src="{% static 'home/showdown/showdown.min.js' %}"></script>
+  <script src="{% static 'home/ace/src/ace.js' %}"></script>
+  <script src="{% static 'home/js/aceConfig.js' %}"></script>
+  {{ data|json_script:"data-script" }}
+  <script src="{% static 'home/js/question.js' %}"></script>
+  <script src="{% static 'home/js/codeExec.js' %}"></script>
+</body>
+
+</html>

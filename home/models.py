@@ -16,7 +16,7 @@ class Question(models.Model):
 
 class Session(models.Model):
   name = models.CharField(max_length=50)
-  users = models.ForeignKey(User, on_delete=models.CASCADE)
+  users = models.ManyToManyField(User)
   selectedQuestions = models.ManyToManyField(Question)
   start_time = models.DateTimeField()
   end_time = models.DateTimeField()
