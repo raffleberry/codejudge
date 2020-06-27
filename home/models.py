@@ -10,6 +10,7 @@ class Question(models.Model):
   statement = models.TextField(max_length=20000)
   points_distribution = models.CharField(max_length=100)
   # parse string and check folder for the datasets inputs
+  custom_checker = models.BooleanField(default=False)
 
   def __str__(self):
     return self.name
@@ -30,8 +31,7 @@ class Submission(models.Model):
   code = models.TextField(max_length=64000)
   points = models.IntegerField()
   session = models.ForeignKey(Session, on_delete=models.CASCADE)
-  
-  time_submitted = models.TimeField(auto_now=True)
+  time_submitted = models.DateTimeField(auto_now=True)
 
   def __str__(self):
     return self.question.name + " by " + self.user.get_username()

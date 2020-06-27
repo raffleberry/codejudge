@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  {% load static %}
+  <title>Home - Code Judge</title>
+  <link rel="stylesheet" href="{% static 'home/semantic/semantic.min.css' %}" />
+  <style>
+    body {
+      background-color: whitesmoke;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ui fixed inverted menu">
+    <div class="ui container">
+      <a href="#" class="header item">
+        <img class="logo" src=" {% static 'home/img/logo.png' %}" />
+        Code Judge
+      </a>
+      <a href="#" class="right floated item">Student :&nbsp; <span id="rollNo">{{ username }}</span></a>
+      <a href="/signout/" class="right floated item" id="logOut">Log Out</a>
+    </div>
+  </div>
+  <div id="maincontent" style="margin: 80px auto 0 auto">
+    <div class="ui container">
+      <table class="ui selectable celled table" id="scoreboard">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            {% for i in data.0.questions %}
+            <th>Q: {{i.qid}}</th>
+            {% endfor %}
+            <th>Total Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            <td>{{ row.sl }} </td>
+            <td>{{ row.user }}</td>
+            {% for q in row.questions %}
+              <td>{{ q.best_attempt.points }}<span>({{ q.attempt_count }})</span></td>
+            {% endfor %}
+            <td>{{ row.total_points }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="{% static 'home/semantic/jquery.js' %}"></script>
+  <script src="{% static 'home/semantic/semantic.min.js' %}"></script>
+</body>
+
+</html>

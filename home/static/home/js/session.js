@@ -25,7 +25,7 @@ tableData.forEach(elem => {
     
     // link
     var link = document.createElement('a');
-    link.href = "/" + elem.id;
+    link.href = elem.id + "/";
     link.innerText = "Open";
     var tdLink = document.createElement('td');
     tdLink.appendChild(link);

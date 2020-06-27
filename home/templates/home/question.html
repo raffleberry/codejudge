@@ -45,19 +45,26 @@
             </td>
           </tr>
         </tbody>
+      </table>
+
+      <table class="ui selectable celled table" id="livetable" style="display: none;">
         <thead>
-          <th>
-            <i id="resultIcon"></i>
-            <pre id="error"></pre>
-            <span id="points"></span>
-          </th>
+          <tr>
+            <th colspan="3">
+              <i id="resultIcon"></i>
+              <span id="points"></span>
+            </th>
+          </tr>
         </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <table class="ui selectable celled table">
         <thead>
           <tr>
             <th class="center aligned" colspan="4">Code Editor</th>
           </tr>
-        </thead>
-        <tbody>
           <tr>
             <td colspan="4">
               <div id="editor"></div>
@@ -68,7 +75,7 @@
               <button class="ui button" id="execute">Submit</button>
             </td>
           </tr>
-        </tbody>
+        </thead>
       </table>
     </div>
   </div>
