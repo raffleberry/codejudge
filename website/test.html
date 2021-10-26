@@ -1,0 +1,16 @@
+<html>
+  <body>
+    <script src="./semantic/jquery.js"></script>
+    <script>
+      $.ajax( {
+        url: "http://localhost:5000/codejudge-b4aa8/us-central1/api",
+        async: true,
+        crossDomain: true,
+        method: "GET",
+        success: (data) => {
+          return data;
+        }
+      }).then(data => console.log(data));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login - Code Judge</title>
+    <link rel="stylesheet" href="./semantic/semantic.min.css" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src="./images/logo.png" />
+          Code Judge
+        </a>
+      </div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui middle aligned center aligned grid">
+        <div class="four wide column">
+          <h2 class="ui teal image header">
+            <img src="./images/person.png" class="image" />
+            <div class="content">
+              Sign Up 
+            </div>
+          </h2>
+          <form class="ui large form" onsubmit="return makeAccount();">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                      <i class="barcode icon"></i>
+                      <input
+                        type="text"
+                        name="handle"
+                        placeholder="Roll No."
+                      />
+                    </div>
+                  </div>
+    
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="user icon"></i>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="E-mail address"
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="confirmPassword"
+                  />
+                </div>
+              </div>
+
+              <div class="ui fluid large teal submit button">Sign Up</div>
+            </div>
+
+            <div id="error" class="ui error message" style="display: none;">
+              <div class="header">Alert!</div>
+              <p>Incorrect email/password, please try again.</p>
+            </div>
+          </form>
+
+          <div class="ui message">
+            Already have an account? <a href="./login.html">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    </script>
+    <script src="./semantic/jquery.js"></script>
+    <script src="./semantic/semantic.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $(".ui.form").form({
+          fields: {
+            handle: {
+              identifier: "handle",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: "Please enter your Roll No."
+                },
+                {
+                  type: "number",
+                  prompt: "Please enter a valid Roll No."
+                }
+              ]
+            },
+            email: {
+              identifier: "email",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: "Please enter your e-mail"
+                },
+                {
+                  type: "email",
+                  prompt: "Please enter a valid e-mail"
+                }
+              ]
+            },
+            password: {
+              identifier: "password",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: "Please enter your password"
+                },
+                {
+                  type: "length[6]",
+                  prompt: "Your password must be at least 6 characters"
+                }
+              ]
+            },
+            confirmPassword: {
+              identifier: "password",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: "Please confirm your password"
+                },
+                {
+                  type: "length[6]",
+                  prompt: "Your passwordConfirm must be at least 6 characters"
+                }
+              ]
+            }
+          }
+        });
+      });
+    </script>
+    <script>
+      function makeAccount() {
+        if (document.forms[0].password.value !== document.forms[0].confirmPassword.value) {
+          alert("Passwords don't match.");
+          return false;
+        }
+        $.ajax({
+          type: "POST",
+          url: authUrl + "/signup",
+          data: $("form").serialize(),
+          success: function(data) {
+            window.location.href = "/login.html";
+          },
+          error: function(res) {
+            $("#error div")
+              .first()
+              .text("Alert! " + res.status);
+            if (res.status === 403) {
+              $("#error p")
+                .first()
+                .text("Incorrect username or password.");
+            } else {
+              $("#error p")
+                .first()
+                .text(res.statusText);
+            }
+            $("#error")[0].style.display = "block";
+          }
+        });
+        return false;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form onsubmit="return pushQ()">
+    <textarea name="code" id="" cols="30" rows="10"></textarea>
+    <button type="submit">submit</button>
+  </form>
+  </body>
+  <script>
+    var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    function pushQ() {
+      $.ajax({
+        async: true,
+        crossDomain: true,
+        url: authUrl + "/pushQuestion",
+        method: "POST",
+        data: { statement: $("textarea").val() },
+        success: function(data) {
+          console.log("successs");
+        },
+        error: function(res) {
+          console.log(res);
+        }
+      });
+      console.log("submit");
+      return false;
+    };
+  </script>
+  <script src="./semantic/jquery.js"></script>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home - Code Judge</title>
+    <link rel="stylesheet" href="./semantic/semantic.min.css" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src="./images/logo.png" />
+          Code Judge
+        </a>
+        <a href="#" class="right floated item"
+          >Student :&nbsp; <span id="rollNo">roll</span></a
+        >
+        <a href="#" class="right floated item" id="logOut">Log Out</a>
+      </div>
+    </div>
+    <div id="loader" class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui container">
+        <table class="ui selectable celled table" id="scoreboard">
+          <thead>
+            <tr>
+              <th class="center aligned" colspan="4">Scoreboard</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    </script>
+    <script src="./semantic/jquery.js"></script>
+    <script src="./semantic/semantic.min.js"></script>
+    <script>
+      var token = localStorage.getItem("codeJudgeAuthToken");
+      fetchScoreboard();
+      // $('#loader').hide();
+      function fetchScoreboard() {
+        var sessionData = JSON.parse(localStorage.getItem("sessionData"));
+        var currentSession = localStorage.getItem("currentSession");
+        if (sessionData === undefined || currentSession === undefined) {
+          window.location.href = "/session.html";
+        }
+        for (var i = 0; i < sessionData.length; i++) {
+          if (sessionData[i].sessionId === currentSession) {
+            currentSession = sessionData[i];
+            break;
+          }
+        }
+        var questionsList = currentSession.selectedQuestions;
+        var handleList = currentSession.students;
+        var sessionId = currentSession.sessionId;
+        var trq = $("<tr>");
+        trq.append(
+          $("<td>")
+          .append($("<b>").append("Rank"))
+          .addClass("center aligned")
+        );
+        trq.append(
+          $("<td>")
+            .append($("<b>").append("Roll No."))
+            .addClass("center aligned")
+        );
+        for (var i = 0; i < questionsList.length; i++) {
+          trq.append(
+            $("<td>")
+              .append($("<b>").append("Q" + (i + 1).toString()))
+              .addClass("center aligned")
+          );
+        }
+        $("#scoreboard")
+          .find("thead")
+          .append(trq);
+        var handle = localStorage.getItem("handle");
+        $("#rollNo").text(handle);
+
+        $.ajax({
+          async: true,
+          crossDomain: true,
+          headers: {
+            authorization: "Bearer " + token
+          },
+          url: authUrl + "/scoreboard",
+          method: "POST",
+          data: {
+            sessionId,
+            questionsList,
+            handleList
+          },
+          success: function(data) {
+            //SHITCODE
+            for (var i = 0; i < data.scoreboard.length; i++) {
+              for (var j = i + 1; j < data.scoreboard.length; j++) {
+                if (
+                  data.scoreboard[i].totalPoints <
+                  data.scoreboard[j].totalPoints
+                ) {
+                  [data.scoreboard[i], data.scoreboard[j]] = [
+                    data.scoreboard[j],
+                    data.scoreboard[i]
+                  ];
+                }
+                if (
+                  data.scoreboard[i].totalPoints ==
+                    data.scoreboard[j].totalPoints &&
+                  data.scoreboard[i].totalTime > data.scoreboard[j].totalTime
+                ) {
+                  [data.scoreboard[i], data.scoreboard[j]] = [
+                    data.scoreboard[j],
+                    data.scoreboard[i]
+                  ];
+                }
+              }
+            }
+            var rank = 0;
+            data.scoreboard.forEach(elem => {
+              // Each row,
+              var tr = $("<tr>");
+                tr.append($("<td>").append(++rank)).addClass(
+                "center aligned"
+              );
+              tr.append($("<td>").append(elem.handle)).addClass(
+                "center aligned"
+              );
+              if (elem.handle === handle) {
+                tr.addClass("active");
+              }
+              for (var i = 0; i < questionsList.length; i++) {
+                tr.append(
+                  $("<td>").append(
+                    elem[questionsList[i]].points +
+                      "<b> | </b>" +
+                      elem[questionsList[i]].attempts +
+                      " tries"
+                  )
+                ).addClass("center aligned");
+              }
+
+              $("#scoreboard")
+                .find("tbody")
+                .append(tr);
+            });
+            $("#loader").fadeOut();
+          },
+          error: function(res) {
+            if (res.status === 403) {
+              window.location.href = "/login.html";
+            } else {
+              $("#scoreboard")
+                .find("tbody")
+                .append(
+                  $("<tr>")
+                    .append(
+                      $("<td>")
+                        .append("Couldn't fetch Details...")
+                        .attr("colspan", "3")
+                    )
+                    .addClass("center aligned")
+                );
+            }
+            $("#loader").fadeOut();
+          }
+        });
+      }
+    </script>
+    <script src="./js/logOut.js"></script>
+  </body>
+</html>

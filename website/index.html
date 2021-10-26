@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home - Code Judge</title>
+    <link rel="stylesheet" href="./semantic/semantic.min.css" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src="./images/logo.png" />
+          Code Judge
+        </a>
+        <a href="#" class="right floated item"
+          >Student :&nbsp; <span id="rollNo">roll</span></a
+        >
+        <a href="#" class="right floated item" id="logOut">Log Out</a>
+      </div>
+    </div>
+    <div id="loader" class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui container">
+        <table class="ui selectable celled table" id="active">
+          <thead>
+            <tr>
+              <th class="center aligned" colspan="4">Active Sessions</th>
+            </tr>
+            <tr class="center aligned">
+              <td>Branch</td>
+              <td>Semester</td>
+              <td>Subject</td>
+              <td>link</td>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    </script>
+    <script src="./semantic/jquery.js"></script>
+    <script src="./semantic/semantic.min.js"></script>
+    <script>
+      var token = localStorage.getItem("codeJudgeAuthToken");
+      fetchTableDetails();
+      function fetchTableDetails() {
+        $.ajax({
+          async: true,
+          crossDomain: true,
+          headers: {
+            authorization: "Bearer " + token
+          },
+          url: authUrl + "/session/active",
+          method: "POST",
+          data: "{}",
+          success: function(data) {
+            localStorage.setItem("sessionData", JSON.stringify(data.data));
+            localStorage.setItem("handle", data.handle);
+            $("#rollNo").text(data.handle);
+            if (data.data.length === 0) {
+              $("#active")
+                .find("tbody")
+                .append(
+                  $("<tr>")
+                    .append(
+                      $("<td>")
+                        .append("No Active sessions found...")
+                        .attr("colspan", "3")
+                    )
+                    .addClass("center aligned")
+                );
+            } else {
+              data.data.forEach(elem => {
+                var tr = $("<tr>");
+                tr.append($("<td>").append(elem.batch.branch))
+                  .addClass("center aligned")
+                  .addClass("center aligned");
+                tr.append($("<td>").append(elem.batch.semester));
+                tr.append($("<td>").append(elem.batch.subject));
+                tr.append(
+                  $("<td>").append(
+                    $("<a>")
+                      .append($("<i>").addClass("arrow right icon"))
+                      .attr("href", "/session.html")
+                      .on("click", () => {
+                        localStorage.setItem("currentSession", elem.sessionId);
+                      })
+                  )
+                );
+                $("#active")
+                  .find("tbody")
+                  .append(tr);
+              });
+            }
+            $("#loader").fadeOut();
+          },
+          error: function(res) {
+            if (res.status === 403) {
+              window.location.href = "/login.html";
+            } else {
+              $("#active")
+                .find("tbody")
+                .append(
+                  $("<tr>")
+                    .append(
+                      $("<td>")
+                        .append("Couldn't fetch Details...")
+                        .attr("colspan", "3")
+                    )
+                    .addClass("center aligned")
+                );
+            }
+            $("#loader").fadeOut();
+          }
+        });
+      }
+    </script>
+    <script src="./js/logOut.js"></script>
+  </body>
+</html>

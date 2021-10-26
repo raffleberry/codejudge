@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home - Code Judge</title>
+    <link rel="stylesheet" href="./semantic/semantic.min.css" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+      #editor {
+        height: 400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src="./images/logo.png" />
+          Code Judge
+        </a>
+        <a href="#" class="right floated item"
+          >Student :&nbsp; <span id="rollNo">roll</span></a
+        >
+        <a href="#" class="right floated item" id="logOut">Log Out</a>
+      </div>
+    </div>
+    <div id="loader" class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui container">
+        <table class="ui selectable celled table" id="active">
+          <thead>
+            <tr>
+              <th class="center aligned" colspan="4">Problem Statement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <div id="question"></div>
+              </td>
+            </tr>
+          </tbody>
+          <thead>
+            <th>
+              <i id="resultIcon"></i>
+              <pre id="error"></pre>
+              <span id="points"></span>
+            </th>
+          </thead>
+          <thead>
+            <tr>
+              <th class="center aligned" colspan="4">Code Editor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <div id="editor"></div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4" class="right aligned">
+                <button class="ui button" id="execute">Submit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    </script>
+    <script src="./semantic/jquery.js"></script>
+    <script src="./semantic/semantic.min.js"></script>
+    <script src="./semantic/showdown.min.js"></script>
+    <script src="./ace/src/ace.js"></script>
+    <script src="./js/aceConfig.js"></script>
+    <script>
+      $("#rollNo").text(localStorage.getItem("handle"));
+      var token = localStorage.getItem("codeJudgeAuthToken");
+      fetchQuestionDetails();
+      function fetchQuestionDetails() {
+        var currentQuestion = localStorage.getItem("currentQuestion");
+        if (currentQuestion === null || currentQuestion === undefined) {
+          window.location.href = "/session.html";
+          return;
+        } else {
+          $.ajax({
+            async: true,
+            crossDomain: true,
+            url: authUrl + "/questions",
+            headers: {
+              authorization: "Bearer " + token
+            },
+            method: "POST",
+            data: { qid: currentQuestion },
+            success: function(data) {
+              converter = new showdown.Converter();
+              $("#question").html(converter.makeHtml(data.statement));
+            },
+            error: function(res) {
+              $("#question").text("Couldn't fetch Details from server...");
+            }
+          }).then(() => $("#loader").fadeOut());
+        }
+      }
+    </script>
+    <script src="./js/codeExec.js"></script>
+    <script src="./js/logOut.js"></script>
+  </body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Session - Code Judge</title>
+    <link rel="stylesheet" href="./semantic/semantic.min.css" />
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          <img class="logo" src="./images/logo.png" />
+          Code Judge
+        </a>
+        <a href="#" class="right floated item"
+          >Student :&nbsp; <span id="rollNo">roll</span></a
+        >
+        <a href="#" class="right floated item" id="logOut">Log Out</a>
+      </div>
+    </div>
+    <div id="loader" class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+    <div id="maincontent" style="margin: 80px auto 0 auto">
+      <div class="ui container">
+        <div class="ui cards">
+          <div class="ui centered card">
+            <div class="content">
+              <div class="header">
+                <span id="hours"></span>:<span id="minutes"></span>:<span
+                  id="seconds"
+                ></span>
+              </div>
+              <div class="meta">Session running</div>
+            </div>
+          </div>
+          <div class="ui centered card">
+            <div class="content">
+              <div class="header">
+                <a href="/scoreboard.html">Scoreboard/Report</a>
+              </div>
+              <div class="meta">Details about the session</div>
+            </div>
+          </div>
+        </div>
+        <table class="ui selectable celled table" id="questions">
+          <thead>
+            <tr>
+              <th class="center aligned" colspan="4">Questions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+    </script>
+    <script src="./semantic/jquery.js"></script>
+    <script src="./semantic/semantic.min.js"></script>
+    <script>
+      var token = localStorage.getItem("codeJudgeAuthToken");
+      fetchCurrentSession();
+      $("#rollNo").text(localStorage.getItem("handle"));
+      function fetchCurrentSession() {
+        var sessiondata = JSON.parse(localStorage.getItem("sessionData"));
+        var handle = localStorage.getItem("handle");
+        $("#rollNo").text(handle);
+        var currentSession = localStorage.getItem("currentSession");
+        var currentSessionData = null;
+        for (var i = 0; i < sessiondata.length; i++) {
+          if (sessiondata[i].sessionId === currentSession) {
+            currentSessionData = sessiondata[i];
+            break;
+          }
+        }
+        if (currentSessionData === null) {
+          window.location.href = "/";
+        } else {
+          renderData(currentSessionData);
+        }
+      }
+
+      function renderData(data) {
+        var sec = Math.floor(Date.now() / 1000) - data.startingTime._seconds;
+        console.log(sec);
+        function pad(val) {
+          return val > 9 ? val : "0" + val;
+        }
+        setInterval(function() {
+          $("#seconds").html(pad(++sec % 60));
+          $("#minutes").html(pad(parseInt((sec / 60) % 60, 10)));
+          $("#hours").html(pad(parseInt(sec / 60 / 60, 10)));
+        }, 1000);
+
+        var questions = data.selectedQuestions;
+        var id = 0;
+        questions.forEach(elem => {
+          id += 1;
+          var tr = $("<tr>");
+          tr.append($("<td>").append("Question #" + id.toString()))
+            .addClass("center aligned")
+            .attr("colspan", "3");
+          tr.append(
+            $("<td>").append(
+              $("<a>")
+                .append($("<i>").addClass("arrow right icon"))
+                .attr("href", "/Question.html")
+                .on("click", () => {
+                  localStorage.setItem("currentQuestion", elem);
+                })
+            )
+          );
+          $("#questions")
+            .find("tbody")
+            .append(tr);
+        });
+        $("#loader").fadeOut();
+      }
+    </script>
+    <script src="./js/logOut.js"></script>
+  </body>
+</html>

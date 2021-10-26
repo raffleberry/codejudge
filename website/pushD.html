@@ -1,0 +1,65 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form onsubmit="return pushQ()">
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <br>
+        <br>
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <br>
+        <br>
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <textarea name="code" id="" cols="30" rows="10"></textarea>
+        <br>
+        <br>
+        <button type="submit">submit</button>
+          </form>
+
+    <script>
+      var authUrl = "http://localhost:5000/codejudge-b4aa8/us-central1/api";
+      function pushQ() {
+        $.ajax({
+          async: true,
+          crossDomain: true,
+          url: authUrl + "/pushData",
+          method: "POST",
+          data: {
+            dataset: [{
+              marks: 20,
+              stdin: $($("textarea")[0]).val(),
+              stdout: $($("textarea")[1]).val()
+            },
+            {
+              marks: 40,
+              stdin: $($("textarea")[2]).val(),
+              stdout: $($("textarea")[3]).val()
+            },
+            {
+              marks:40,
+              stdin: $($("textarea")[4]).val(),
+              stdout: $($("textarea")[5]).val()
+            },
+
+            ]
+          },
+          success: function(data) {
+            console.log("successs");
+          },
+          error: function(res) {
+            console.log(res);
+          }
+        });
+        console.log("submit");
+        return false;
+      }
+    </script>
+    <script src="./semantic/jquery.js"></script>
+  </body>
+</html>
